@@ -13,38 +13,6 @@ logger = logging.getLogger(__name__)
 
 
 class FreqaiRLStrategy(IStrategy):
-    """
-    Example strategy showing how the user connects their own
-    IFreqaiModel to the strategy.
-
-    Warning! This is a showcase of functionality,
-    which means that it is designed to show various functions of FreqAI
-    and it runs on all computers. We use this showcase to help users
-    understand how to build a strategy, and we use it as a benchmark
-    to help debug possible problems.
-
-    This means this is *not* meant to be run live in production.
-    """
-
-    minimal_roi = {"0": 0.1, "240": -1}
-
-    plot_config = {
-        "main_plot": {},
-        "subplots": {
-            "&-s_close": {"&-s_close": {"color": "blue"}},
-            "do_predict": {
-                "do_predict": {"color": "brown"},
-            },
-        },
-    }
-
-    process_only_new_candles = True
-    stoploss = -0.05
-    use_exit_signal = True
-    # this is the maximum period fed to talib (timeframe independent)
-    startup_candle_count: int = 40
-    can_short = True
-
 
     def feature_engineering_standard(self, dataframe: DataFrame, **kwargs) -> DataFrame:
         # The following features are necessary for RL models
@@ -54,18 +22,15 @@ class FreqaiRLStrategy(IStrategy):
         dataframe[f"%-raw_low"] = dataframe["low"]
         return dataframe
 
-
     def set_freqai_targets(self, dataframe, **kwargs) -> DataFrame:
         # For RL, there are no direct targets to set. This is filler (neutral)
         # until the agent sends an action.
         dataframe["&-action"] = 0
         return dataframe
 
-
     def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         dataframe = self.freqai.start(dataframe, metadata, self)
         return dataframe
-
 
     def populate_entry_trend(self, df: DataFrame, metadata: dict) -> DataFrame:
 
@@ -95,28 +60,3 @@ class FreqaiRLStrategy(IStrategy):
             df.loc[reduce(lambda x, y: x & y, exit_short_conditions), "exit_short"] = 1
 
         return df
-
-    # def confirm_trade_entry(
-    #     self,
-    #     pair: str,
-    #     order_type: str,
-    #     amount: float,
-    #     rate: float,
-    #     time_in_force: str,
-    #     current_time,
-    #     entry_tag,
-    #     side: str,
-    #     **kwargs,
-    # ) -> bool:
-
-    #     df, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
-    #     last_candle = df.iloc[-1].squeeze()
-
-    #     if side == "long":
-    #         if rate > (last_candle["close"] * (1 + 0.0025)):
-    #             return False
-    #     else:
-    #         if rate < (last_candle["close"] * (1 - 0.0025)):
-    #             return False
-
-    #     return True
