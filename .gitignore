@@ -1,4 +1,5 @@
 # Freqtrade rules
+freqtrade/templates copy
 config*.json
 *.sqlite
 *.sqlite-shm
