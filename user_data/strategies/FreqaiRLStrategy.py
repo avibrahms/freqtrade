@@ -56,18 +56,6 @@ class FreqaiRLStrategy(IStrategy):
 
 
     def set_freqai_targets(self, dataframe, **kwargs) -> DataFrame:
-        """
-        *Only functional with FreqAI enabled strategies*
-        Required function to set the targets for the model.
-        All targets must be prepended with `&` to be recognized by the FreqAI internals.
-
-        More details about feature engineering available:
-
-        https://www.freqtrade.io/en/latest/freqai-feature-engineering
-
-        :param df: strategy dataframe which will receive the targets
-        usage example: dataframe["&-target"] = dataframe["close"].shift(-1) / dataframe["close"]
-        """
         # For RL, there are no direct targets to set. This is filler (neutral)
         # until the agent sends an action.
         dataframe["&-action"] = 0
