@@ -16,3 +16,6 @@ freqtrade download-data --pairs ETH/BTC --exchange binance --days 5 -t 1h
 
 # Run backtesting
 freqtrade backtesting --config user_data/config.json --strategy SampleStrategy --timerange 20190801-20191001 -i 5m
+
+# Delete all models before starting FreqAI
+rm -rf user_data/models/uniqe-id;freqtrade trade --strategy FreqaiExampleStrategy --config user_data/config_freqai.example.json --freqaimodel XGBoostRFRegressor

@@ -7,7 +7,7 @@
     "tradable_balance_ratio": 1,
     "fiat_display_currency": "USD",
     "dry_run": true,
-    "timeframe": "3m",
+    "timeframe": "15m",
     "dry_run_wallet": 1000,
     "cancel_open_orders_on_exit": true,
     "unfilledtimeout": {
@@ -54,17 +54,17 @@
         "identifier": "uniqe-id",
         "feature_parameters": {
             "include_timeframes": [
-                 "3m",
-                //  "15m",
-                //  "1h",
-                //  "4h",
+                //  "3m",
+                 "15m",
+                 "1h",
+                 "4h",
                 //  "1d",
                 //  "1w",
                 //  "1M"
             ],
             "include_corr_pairlist": [
-                // "MANTA/USDT:USDT",
-            // "ALT/USDT:USDT",
+                "MANTA/USDT:USDT",
+            "ALT/USDT:USDT",
             // "AI/USDT:USDT",
             // "XAI/USDT:USDT",
             // "ACE/USDT:USDT",
@@ -78,7 +78,7 @@
             "weight_factor": 0.9,
             "principal_component_analysis": false,
             "use_SVM_to_remove_outliers": false,
-            "indicator_periods_candles": [2],
+            "indicator_periods_candles": [1],
             "plot_feature_importances": 0
         },
         "data_split_parameters": {
