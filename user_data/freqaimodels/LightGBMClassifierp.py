@@ -5,7 +5,7 @@ from lightgbm import LGBMClassifier
 
 from freqtrade.freqai.base_models.BaseClassifierModel import BaseClassifierModel
 from freqtrade.freqai.data_kitchen import FreqaiDataKitchen
-
+from freqtrade.util.vis import save_df_to_csv, save_dict_to_json, save_array_to_csv
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +27,11 @@ class LightGBMClassifierp(BaseClassifierModel):
             labels, weights
         :param dk: The datakitchen object for the current coin/model
         """
+        for key in data_dictionary.keys():
+            if 'label' in key or 'feature' in key or 'date' in key:
+                save_df_to_csv(data_dictionary[str(key)],str(key))
+            if 'weight' in key:
+                save_array_to_csv(data_dictionary[str(key)],str(key))
 
         if self.freqai_info.get('data_split_parameters', {}).get('test_size', 0.1) == 0:
             eval_set = None
