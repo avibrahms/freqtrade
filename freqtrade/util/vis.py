@@ -5,7 +5,7 @@ from pathlib import Path
 def save_df_to_csv(df, label=''):
     # Define the directory and filename
     outer_func_name = inspect.stack()[1].function
-    directory = Path("vis")  # Target directory
+    directory = Path("user_data/vis")  # Target directory
     csv_filename = directory / f"{outer_func_name}{label}.csv"
 
     # Check if the file already exists
@@ -22,7 +22,7 @@ def save_df_to_csv(df, label=''):
 def save_dict_to_json(d, label=''):
     # Define the directory and filename
     outer_func_name = inspect.stack()[1].function
-    directory = Path("vis")  # Target directory
+    directory = Path("user_data/vis")  # Target directory
     json_filename = directory / f"{outer_func_name}{label}.json"
 
     # Check if the file already exists

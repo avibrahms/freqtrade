@@ -35,33 +35,37 @@ class FreqaiExampleStrategyp(IStrategy):
 
     def feature_engineering_expand_all(self, dataframe: DataFrame, period: int,
                                        metadata: Dict, **kwargs) -> DataFrame:
+        dataframe[f"%-raw_close"] = dataframe["close"]
+        dataframe[f"%-raw_open"] = dataframe["open"]
+        dataframe[f"%-raw_high"] = dataframe["high"]
+        dataframe[f"%-raw_low"] = dataframe["low"]
+        dataframe["%-raw_volume"] = dataframe["volume"]
+        # dataframe["%-rsi-period"] = ta.RSI(dataframe, timeperiod=period)
+        # dataframe["%-mfi-period"] = ta.MFI(dataframe, timeperiod=period)
+        # dataframe["%-adx-period"] = ta.ADX(dataframe, timeperiod=period)
+        # dataframe["%-sma-period"] = ta.SMA(dataframe, timeperiod=period)
+        # dataframe["%-ema-period"] = ta.EMA(dataframe, timeperiod=period)
 
-        dataframe["%-rsi-period"] = ta.RSI(dataframe, timeperiod=period)
-        dataframe["%-mfi-period"] = ta.MFI(dataframe, timeperiod=period)
-        dataframe["%-adx-period"] = ta.ADX(dataframe, timeperiod=period)
-        dataframe["%-sma-period"] = ta.SMA(dataframe, timeperiod=period)
-        dataframe["%-ema-period"] = ta.EMA(dataframe, timeperiod=period)
+        # bollinger = qtpylib.bollinger_bands(
+        #     qtpylib.typical_price(dataframe), window=period, stds=2.2
+        # )
+        # dataframe["bb_lowerband-period"] = bollinger["lower"]
+        # dataframe["bb_middleband-period"] = bollinger["mid"]
+        # dataframe["bb_upperband-period"] = bollinger["upper"]
 
-        bollinger = qtpylib.bollinger_bands(
-            qtpylib.typical_price(dataframe), window=period, stds=2.2
-        )
-        dataframe["bb_lowerband-period"] = bollinger["lower"]
-        dataframe["bb_middleband-period"] = bollinger["mid"]
-        dataframe["bb_upperband-period"] = bollinger["upper"]
+        # dataframe["%-bb_width-period"] = (
+        #     dataframe["bb_upperband-period"]
+        #     - dataframe["bb_lowerband-period"]
+        # ) / dataframe["bb_middleband-period"]
+        # dataframe["%-close-bb_lower-period"] = (
+        #     dataframe["close"] / dataframe["bb_lowerband-period"]
+        # )
 
-        dataframe["%-bb_width-period"] = (
-            dataframe["bb_upperband-period"]
-            - dataframe["bb_lowerband-period"]
-        ) / dataframe["bb_middleband-period"]
-        dataframe["%-close-bb_lower-period"] = (
-            dataframe["close"] / dataframe["bb_lowerband-period"]
-        )
+        # dataframe["%-roc-period"] = ta.ROC(dataframe, timeperiod=period)
 
-        dataframe["%-roc-period"] = ta.ROC(dataframe, timeperiod=period)
-
-        dataframe["%-relative_volume-period"] = (
-            dataframe["volume"] / dataframe["volume"].rolling(period).mean()
-        )
+        # dataframe["%-relative_volume-period"] = (
+        #     dataframe["volume"] / dataframe["volume"].rolling(period).mean()
+        # )
         save_df_to_csv(dataframe,'dataframe')
         save_dict_to_json(metadata,'metadata')
         return dataframe
@@ -69,16 +73,19 @@ class FreqaiExampleStrategyp(IStrategy):
     def feature_engineering_expand_basic(
             self, dataframe: DataFrame, metadata: Dict, **kwargs) -> DataFrame:
 
-        dataframe["%-pct-change"] = dataframe["close"].pct_change()
-        dataframe["%-raw_volume"] = dataframe["volume"]
-        dataframe["%-raw_price"] = dataframe["close"]
+        # dataframe["%-pct-change"] = dataframe["close"].pct_change()
+
+        # dataframe["%-raw_price"] = dataframe["close"]
         save_df_to_csv(dataframe,'dataframe')
         save_dict_to_json(metadata,'metadata')
         return dataframe
 
     def feature_engineering_standard(
             self, dataframe: DataFrame, metadata: Dict, **kwargs) -> DataFrame:
-
+        # dataframe[f"%-raw_close"] = dataframe["close"]
+        # dataframe[f"%-raw_open"] = dataframe["open"]
+        # dataframe[f"%-raw_high"] = dataframe["high"]
+        # dataframe[f"%-raw_low"] = dataframe["low"]
         dataframe["%-day_of_week"] = dataframe["date"].dt.dayofweek
         dataframe["%-hour_of_day"] = dataframe["date"].dt.hour
         save_df_to_csv(dataframe,'dataframe')
@@ -86,7 +93,8 @@ class FreqaiExampleStrategyp(IStrategy):
         return dataframe
 
     def set_freqai_targets(self, dataframe: DataFrame, metadata: Dict, **kwargs) -> DataFrame:
-
+        # dataframe["&-s_close"] = 0
+        # dataframe["&-action"] = 0
         dataframe["&-s_close"] = (
             dataframe["close"]
             .shift(-self.freqai_info["feature_parameters"]["label_period_candles"])
