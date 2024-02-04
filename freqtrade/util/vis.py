@@ -4,6 +4,20 @@ from pathlib import Path
 import pandas as pd
 import numpy as np
 
+# delete vis folcer and all files in it if it exists
+def delete_vis_folder(directory):
+    try:
+        directory = Path(directory)
+        if directory.exists():
+            for item in directory.iterdir():
+                if item.is_file():
+                    item.unlink()
+            directory.rmdir()
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+delete_vis_folder("user_data/vis")
+
 def save_df_to_csv(df, label=''):
     # Define the directory and filename
     outer_func_name = inspect.stack()[1].function

@@ -1,6 +1,6 @@
 {
-    "trading_mode": "futures",
-    "margin_mode": "isolated",
+    "trading_mode": "spot",
+    // "margin_mode": "isolated",
     "max_open_trades": 5,
     "stake_currency": "USDT",
     "stake_amount": 200,
@@ -21,7 +21,7 @@
         "ccxt_config": {},
         "ccxt_async_config": {},
         "pair_whitelist": [
-            "BTC/USDT:USDT"
+            "BTC/USDT"
         ],
         "pair_blacklist": []
     },
@@ -47,23 +47,23 @@
     ],
     "freqai": {
         "enabled": true,
-        "purge_old_models": 2,
-        "train_period_days": 15,
+        "purge_old_models": 5,
+        "train_period_days": 1,
         "backtest_period_days": 7,
-        "live_retrain_hours": 0,
+        "live_retrain_hours": 0.003,
         "identifier": "uniqe-id",
         "feature_parameters": {
             "include_timeframes": [
                  "3m",
-                 "15m",
-                 "1h",
+                //  "15m",
+                //  "1h",
                 //  "4h",
                 //  "1d",
                 //  "1w",
                 //  "1M"
             ],
             "include_corr_pairlist": [
-                "MANTA/USDT:USDT",
+                // "MANTA/USDT:USDT",
             // "ALT/USDT:USDT",
             // "AI/USDT:USDT",
             // "XAI/USDT:USDT",
@@ -72,16 +72,13 @@
             // "JUP/USDT:USDT",
             //     "ETH/USDT:USDT"
             ],
-            "label_period_candles": 20,
-            "include_shifted_candles": 2,
+            "label_period_candles": 1,
+            // "include_shifted_candles": 2,
             "DI_threshold": 0.9,
             "weight_factor": 0.9,
             "principal_component_analysis": false,
-            "use_SVM_to_remove_outliers": true,
-            "indicator_periods_candles": [
-                10,
-                20
-            ],
+            "use_SVM_to_remove_outliers": false,
+            "indicator_periods_candles": [2],
             "plot_feature_importances": 0
         },
         "data_split_parameters": {

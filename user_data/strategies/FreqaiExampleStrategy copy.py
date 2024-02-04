@@ -43,7 +43,7 @@ class FreqaiExampleStrategy(IStrategy):
     use_exit_signal = True
     # this is the maximum period fed to talib (timeframe independent)
     startup_candle_count: int = 40
-    can_short = False
+    can_short = True
 
     def feature_engineering_expand_all(self, dataframe: DataFrame, period: int,
                                        metadata: Dict, **kwargs) -> DataFrame:
@@ -75,6 +75,32 @@ class FreqaiExampleStrategy(IStrategy):
         dataframe["%-ema-period"] = ta.EMA(dataframe, timeperiod=period)
         """
 
+        dataframe["%-rsi-period"] = ta.RSI(dataframe, timeperiod=period)
+        dataframe["%-mfi-period"] = ta.MFI(dataframe, timeperiod=period)
+        dataframe["%-adx-period"] = ta.ADX(dataframe, timeperiod=period)
+        dataframe["%-sma-period"] = ta.SMA(dataframe, timeperiod=period)
+        dataframe["%-ema-period"] = ta.EMA(dataframe, timeperiod=period)
+
+        bollinger = qtpylib.bollinger_bands(
+            qtpylib.typical_price(dataframe), window=period, stds=2.2
+        )
+        dataframe["bb_lowerband-period"] = bollinger["lower"]
+        dataframe["bb_middleband-period"] = bollinger["mid"]
+        dataframe["bb_upperband-period"] = bollinger["upper"]
+
+        dataframe["%-bb_width-period"] = (
+            dataframe["bb_upperband-period"]
+            - dataframe["bb_lowerband-period"]
+        ) / dataframe["bb_middleband-period"]
+        dataframe["%-close-bb_lower-period"] = (
+            dataframe["close"] / dataframe["bb_lowerband-period"]
+        )
+
+        dataframe["%-roc-period"] = ta.ROC(dataframe, timeperiod=period)
+
+        dataframe["%-relative_volume-period"] = (
+            dataframe["volume"] / dataframe["volume"].rolling(period).mean()
+        )
         save_df_to_csv(dataframe,'dataframe')
         save_dict_to_json(metadata,'metadata')
         return dataframe
@@ -111,15 +137,9 @@ class FreqaiExampleStrategy(IStrategy):
         dataframe["%-pct-change"] = dataframe["close"].pct_change()
         dataframe["%-ema-200"] = ta.EMA(dataframe, timeperiod=200)
         """
-
-        dataframe[f"%-close"] = dataframe["close"]
-        dataframe[f"%-open"] = dataframe["open"]
-        dataframe[f"%-high"] = dataframe["high"]
-        dataframe[f"%-low"] = dataframe["low"]
-        dataframe[f"%-volume"] = dataframe["volume"]
-        # dataframe["%-pct-change"] = dataframe["close"].pct_change()
-        # dataframe["%-raw_volume"] = dataframe["volume"]
-        # dataframe["%-raw_price"] = dataframe["close"]
+        dataframe["%-pct-change"] = dataframe["close"].pct_change()
+        dataframe["%-raw_volume"] = dataframe["volume"]
+        dataframe["%-raw_price"] = dataframe["close"]
         save_df_to_csv(dataframe,'dataframe')
         save_dict_to_json(metadata,'metadata')
         return dataframe
@@ -151,8 +171,8 @@ class FreqaiExampleStrategy(IStrategy):
         :param metadata: metadata of current pair
         usage example: dataframe["%-day_of_week"] = (dataframe["date"].dt.dayofweek + 1) / 7
         """
-        # dataframe["%-day_of_week"] = dataframe["date"].dt.dayofweek
-        # dataframe["%-hour_of_day"] = dataframe["date"].dt.hour
+        dataframe["%-day_of_week"] = dataframe["date"].dt.dayofweek
+        dataframe["%-hour_of_day"] = dataframe["date"].dt.hour
         save_df_to_csv(dataframe,'dataframe')
         save_dict_to_json(metadata,'metadata')
         return dataframe
