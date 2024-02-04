@@ -27,6 +27,7 @@ class LightGBMRegressorp(BaseRegressionModel):
             labels, weights
         :param dk: The datakitchen object for the current coin/model
         """
+        save_dict_to_json(data_dictionary,'data_dictionary')
 
         if self.freqai_info.get('data_split_parameters', {}).get('test_size', 0.1) == 0:
             eval_set = None

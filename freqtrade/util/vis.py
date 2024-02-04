@@ -1,6 +1,7 @@
 import json
 import inspect
 from pathlib import Path
+import pandas as pd
 
 def save_df_to_csv(df, label=''):
     # Define the directory and filename
@@ -19,20 +20,25 @@ def save_df_to_csv(df, label=''):
     # else:
     #     print(f"File {csv_filename} already exists. No action taken.")
 
-def save_dict_to_json(d, label=''):
-    # Define the directory and filename
-    outer_func_name = inspect.stack()[1].function
-    directory = Path("user_data/vis")  # Target directory
-    json_filename = directory / f"{outer_func_name}{label}.json"
+def default_converter(obj):
+    """Custom converter for objects not serializable by default json.dump."""
+    if isinstance(obj, pd.DataFrame):
+        return obj.to_dict(orient='records')  # or obj.to_json(orient='records') for JSON string
+    raise TypeError(f'Object of type {obj.__class__.__name__} is not JSON serializable')
 
-    # Check if the file already exists
-    if not json_filename.exists():
-        # Ensure the directory exists; if not, create it
+def save_dict_to_json(d, label=''):
+    try:
+        directory = Path("user_data/vis")
+        outer_func_name = inspect.stack()[1].function
+        json_filename = directory / f"{outer_func_name}{label}.json"
+
         directory.mkdir(parents=True, exist_ok=True)
 
-        # Save the dictionary to a JSON file
-        with open(json_filename, 'w') as json_file:
-            json.dump(d, json_file, indent=4)
-        print(f"Dictionary saved as {json_filename}")
-    # else:
-    #     print(f"File {json_filename} already exists. No action taken.")
+        if not json_filename.exists():
+            with open(json_filename, 'w') as json_file:
+                json.dump(d, json_file, default=default_converter, indent=4)
+            print(f"Dictionary saved as {json_filename}")
+        # else:
+        #     print(f"File {json_filename} already exists. No action taken.")
+    except Exception as e:
+        print(f"An error occurred: {e}")

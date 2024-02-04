@@ -64,13 +64,13 @@
             ],
             "include_corr_pairlist": [
                 "MANTA/USDT:USDT",
-            "ALT/USDT:USDT",
-            "AI/USDT:USDT",
-            "XAI/USDT:USDT",
-            "ACE/USDT:USDT",
-            "NFP/USDT:USDT",
-            "JUP/USDT:USDT",
-                "ETH/USDT:USDT"
+            // "ALT/USDT:USDT",
+            // "AI/USDT:USDT",
+            // "XAI/USDT:USDT",
+            // "ACE/USDT:USDT",
+            // "NFP/USDT:USDT",
+            // "JUP/USDT:USDT",
+            //     "ETH/USDT:USDT"
             ],
             "label_period_candles": 20,
             "include_shifted_candles": 2,
