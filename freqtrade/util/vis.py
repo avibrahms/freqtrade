@@ -3,6 +3,7 @@ import inspect
 from pathlib import Path
 import pandas as pd
 import numpy as np
+import os
 
 # delete vis folcer and all files in it if it exists
 def delete_vis_folder(directory):
@@ -72,5 +73,15 @@ def save_array_to_csv(array, label=''):
         # Save the NumPy array to a CSV file
         np.savetxt(csv_filename, array, delimiter=',')
         print(f"Array saved as {csv_filename}")
+    # else:
+        # print(f"File {csv_filename} already exists. No action taken.")
+
+def save_data_with_metadata(data, pair=""):
+    # Save data based on its type
+    token = pair.split("/")[0]
+    if isinstance(data, pd.DataFrame) or isinstance(data, pd.Series):
+        save_df_to_csv(data, token)
+    elif isinstance(data, np.ndarray):
+        save_array_to_csv(data, token)
     else:
-        print(f"File {csv_filename} already exists. No action taken.")
+        raise ValueError(f"Unsupported data type: {type(data)}")
