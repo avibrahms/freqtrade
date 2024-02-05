@@ -14,12 +14,27 @@ logger = logging.getLogger(__name__)
 
 class FreqaiRLStrategy(IStrategy):
 
+    def feature_engineering_expand_basic(self, dataframe: DataFrame, metadata: Dict, **kwargs) -> DataFrame:  # noqa: E501
+        # The following features are necessary for RL models
+        dataframe["%-raw_close"] = dataframe["close"]
+        dataframe["%-raw_open"] = dataframe["open"]
+        dataframe["%-raw_high"] = dataframe["high"]
+        dataframe["%-raw_low"] = dataframe["low"]
+        dataframe["%-raw_volume"] = dataframe["volume"]
+        save_data_with_metadata(dataframe, metadata["pair"])
+        return dataframe
+
     def feature_engineering_standard(self, dataframe: DataFrame, metadata: Dict, **kwargs) -> DataFrame:  # noqa: E501
         # The following features are necessary for RL models
         dataframe["%-raw_close"] = dataframe["close"]
         dataframe["%-raw_open"] = dataframe["open"]
         dataframe["%-raw_high"] = dataframe["high"]
         dataframe["%-raw_low"] = dataframe["low"]
+        dataframe["%-raw_volume"] = dataframe["volume"]
+        dataframe["%-day_of_week"] = dataframe["date"].dt.dayofweek
+        dataframe["%-hour_of_day"] = dataframe["date"].dt.hour
+        dataframe["%-month_of_year"] = dataframe["date"].dt.month
+        dataframe["%-minute_of_day"] = dataframe["date"].dt.minute
         save_data_with_metadata(dataframe, metadata["pair"])
         return dataframe
 
