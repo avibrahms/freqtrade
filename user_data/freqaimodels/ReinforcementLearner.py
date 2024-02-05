@@ -55,7 +55,8 @@ class ReinforcementLearner(BaseReinforcementLearningModel):
         model Any = trained model to be used for inference in dry/live/backtesting
         """
         for key in data_dictionary.keys():
-            save_data_with_metadata(data_dictionary[key], dk.pair)
+            print(key, type(data_dictionary[key]))
+            save_data_with_metadata(data_dictionary[key], key + dk.pair)
 
         train_df = data_dictionary["train_features"]
         total_timesteps = self.freqai_info["rl_config"]["train_cycles"] * len(train_df)

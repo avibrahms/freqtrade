@@ -21,9 +21,8 @@ delete_vis_folder("user_data/vis")
 
 def save_df_to_csv(df, label=''):
     # Define the directory and filename
-    outer_func_name = inspect.stack()[1].function
     directory = Path("user_data/vis")  # Target directory
-    csv_filename = directory / f"{outer_func_name}{label}.csv"
+    csv_filename = directory / f"{label}.csv"
 
     # Check if the file already exists
     if not csv_filename.exists():
@@ -45,8 +44,7 @@ def default_converter(obj):
 def save_dict_to_json(d, label=''):
     try:
         directory = Path("user_data/vis")
-        outer_func_name = inspect.stack()[1].function
-        json_filename = directory / f"{outer_func_name}{label}.json"
+        json_filename = directory / f"{label}.json"
 
         directory.mkdir(parents=True, exist_ok=True)
 
@@ -61,9 +59,8 @@ def save_dict_to_json(d, label=''):
 
 def save_array_to_csv(array, label=''):
     # Define the directory and filename
-    outer_func_name = inspect.stack()[1].function
     directory = Path("user_data/vis")  # Target directory
-    csv_filename = directory / f"{outer_func_name}{label}.csv"
+    csv_filename = directory / f"{label}.csv"
 
     # Check if the file already exists
     if not csv_filename.exists():
@@ -77,11 +74,13 @@ def save_array_to_csv(array, label=''):
         # print(f"File {csv_filename} already exists. No action taken.")
 
 def save_data_with_metadata(data, pair=""):
+    outer_func_name = inspect.stack()[1].function
     # Save data based on its type
     token = pair.split("/")[0]
+    label = outer_func_name + token
     if isinstance(data, pd.DataFrame) or isinstance(data, pd.Series):
-        save_df_to_csv(data, token)
+        save_df_to_csv(data, label)
     elif isinstance(data, np.ndarray):
-        save_array_to_csv(data, token)
+        save_array_to_csv(data, label)
     else:
         raise ValueError(f"Unsupported data type: {type(data)}")
