@@ -7,6 +7,7 @@ from freqtrade.freqai.base_models.BaseRegressionModel import BaseRegressionModel
 from freqtrade.freqai.data_kitchen import FreqaiDataKitchen
 from freqtrade.freqai.tensorboard import TBCallback
 
+from freqtrade.util.vis import save_df_to_csv, save_dict_to_json, save_array_to_csv
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +29,11 @@ class XGBoostRegressor(BaseRegressionModel):
             labels, weights
         :param dk: The datakitchen object for the current coin/model
         """
+        for key in data_dictionary.keys():
+            if 'label' in key or 'feature' in key or 'date' in key:
+                save_df_to_csv(data_dictionary[str(key)],str(key))
+            if 'weight' in key:
+                save_array_to_csv(data_dictionary[str(key)],str(key))
 
         X = data_dictionary["train_features"]
         y = data_dictionary["train_labels"]

@@ -75,8 +75,8 @@ class FreqaiExampleStrategy(IStrategy):
         dataframe["%-ema-period"] = ta.EMA(dataframe, timeperiod=period)
         """
 
-        save_df_to_csv(dataframe,'dataframe')
-        save_dict_to_json(metadata,'metadata')
+        # save_df_to_csv(dataframe,'dataframe')
+        # save_dict_to_json(metadata,'metadata')
         return dataframe
 
     def feature_engineering_expand_basic(
@@ -120,8 +120,8 @@ class FreqaiExampleStrategy(IStrategy):
         # dataframe["%-pct-change"] = dataframe["close"].pct_change()
         # dataframe["%-raw_volume"] = dataframe["volume"]
         # dataframe["%-raw_price"] = dataframe["close"]
-        save_df_to_csv(dataframe,'dataframe')
-        save_dict_to_json(metadata,'metadata')
+        # save_df_to_csv(dataframe,'dataframe')
+        # save_dict_to_json(metadata,'metadata')
         return dataframe
 
     def feature_engineering_standard(
@@ -151,10 +151,12 @@ class FreqaiExampleStrategy(IStrategy):
         :param metadata: metadata of current pair
         usage example: dataframe["%-day_of_week"] = (dataframe["date"].dt.dayofweek + 1) / 7
         """
-        # dataframe["%-day_of_week"] = dataframe["date"].dt.dayofweek
-        # dataframe["%-hour_of_day"] = dataframe["date"].dt.hour
-        save_df_to_csv(dataframe,'dataframe')
-        save_dict_to_json(metadata,'metadata')
+        dataframe["%-day_of_week"] = dataframe["date"].dt.dayofweek
+        dataframe["%-hour_of_day"] = dataframe["date"].dt.hour
+        dataframe["%-month_of_year"] = dataframe["date"].dt.month
+        dataframe["%-minute_of_day"] = dataframe["date"].dt.minute
+        # save_df_to_csv(dataframe,'dataframe')
+        # save_dict_to_json(metadata,'metadata')
         return dataframe
 
     def set_freqai_targets(self, dataframe: DataFrame, metadata: Dict, **kwargs) -> DataFrame:

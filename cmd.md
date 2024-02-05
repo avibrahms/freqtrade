@@ -19,3 +19,6 @@ freqtrade backtesting --config user_data/config.json --strategy SampleStrategy -
 
 # Delete all models before starting FreqAI
 rm -rf user_data/models/uniqe-id;freqtrade trade --strategy FreqaiExampleStrategy --config user_data/config_freqai.example.json --freqaimodel XGBoostRFRegressor
+
+# For reinforcement Learning
+rm -rf user_data/models/uniqe-id;freqtrade trade --strategy FreqaiRLStrategy --config user_data/config_freqai.RL.example.json --freqaimodel ReinforcementLearner

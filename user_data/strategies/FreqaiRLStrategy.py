@@ -33,21 +33,12 @@ class FreqaiRLStrategy(IStrategy):
         return dataframe
 
     def populate_entry_trend(self, df: DataFrame, metadata: dict) -> DataFrame:
-
         enter_long_conditions = [df["do_predict"] == 1, df["&-action"] == 1]
-
         if enter_long_conditions:
-            df.loc[
-                reduce(lambda x, y: x & y, enter_long_conditions), ["enter_long", "enter_tag"]
-            ] = (1, "long")
-
+            df.loc[reduce(lambda x, y: x & y, enter_long_conditions), ["enter_long", "enter_tag"]] = (1, "long")  # noqa: E501
         enter_short_conditions = [df["do_predict"] == 1, df["&-action"] == 3]
-
         if enter_short_conditions:
-            df.loc[
-                reduce(lambda x, y: x & y, enter_short_conditions), ["enter_short", "enter_tag"]
-            ] = (1, "short")
-
+            df.loc[reduce(lambda x, y: x & y, enter_short_conditions), ["enter_short", "enter_tag"]] = (1, "short")  # noqa: E501
         return df
 
     def populate_exit_trend(self, df: DataFrame, metadata: dict) -> DataFrame:
