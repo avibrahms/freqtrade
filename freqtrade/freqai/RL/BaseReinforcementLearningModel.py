@@ -27,6 +27,7 @@ from freqtrade.freqai.RL.BaseEnvironment import BaseActions, BaseEnvironment, Po
 from freqtrade.freqai.tensorboard.TensorboardCallback import TensorboardCallback
 from freqtrade.persistence import Trade
 
+from freqtrade.util.vis import save_data_with_metadata
 
 logger = logging.getLogger(__name__)
 
@@ -101,7 +102,7 @@ class BaseReinforcementLearningModel(IFreqaiModel):
         :returns:
         :model: Trained model which can be used to inference (self.predict)
         """
-
+        save_data_with_metadata(unfiltered_df, 'unfiltered_df' + pair)
         logger.info("--------------------Starting training " f"{pair} --------------------")
 
         features_filtered, labels_filtered = dk.filter_features(
@@ -144,7 +145,7 @@ class BaseReinforcementLearningModel(IFreqaiModel):
         model = self.fit(dd, dk)
 
         logger.info(f"--------------------done training {pair}--------------------")
-
+        
         return model
 
     def set_train_and_eval_environments(self, data_dictionary: Dict[str, DataFrame],
@@ -246,7 +247,7 @@ class BaseReinforcementLearningModel(IFreqaiModel):
         :do_predict: np.array of 1s and 0s to indicate places where freqai needed to remove
         data (NaNs) or felt uncertain about data (PCA and DI index)
         """
-
+        save_data_with_metadata(unfiltered_df, 'unfiltered_df' + dk.pair)
         dk.find_features(unfiltered_df)
         filtered_dataframe, _ = dk.filter_features(
             unfiltered_df, dk.training_features_list, training_filter=False
@@ -260,7 +261,7 @@ class BaseReinforcementLearningModel(IFreqaiModel):
         pred_df = self.rl_model_predict(
             dk.data_dictionary["prediction_features"], dk, self.model)
         pred_df.fillna(0, inplace=True)
-
+        save_data_with_metadata(pred_df, 'pred_df' + dk.pair)
         return (pred_df, dk.do_predict)
 
     def rl_model_predict(self, dataframe: DataFrame,
@@ -271,6 +272,7 @@ class BaseReinforcementLearningModel(IFreqaiModel):
         :param dk: FreqaiDatakitchen = data kitchen for the current pair
         :param model: Any = the trained model used to inference the features.
         """
+        
         output = pd.DataFrame(np.zeros(len(dataframe)), columns=dk.label_list)
 
         def _predict(window):
@@ -280,11 +282,13 @@ class BaseReinforcementLearningModel(IFreqaiModel):
                 observations['current_profit_pct'] = current_profit
                 observations['position'] = market_side
                 observations['trade_duration'] = trade_duration
+            save_data_with_metadata(observations, 'observations' + dk.pair)
             res, _ = model.predict(observations, deterministic=True)
+
             return res
-
+        save_data_with_metadata(output, 'output_before' + dk.pair)
         output = output.rolling(window=self.CONV_WIDTH).apply(_predict)
-
+        save_data_with_metadata(output, 'output_after' + dk.pair)
         return output
 
     def build_ohlc_price_dataframes(self, data_dictionary: dict,
